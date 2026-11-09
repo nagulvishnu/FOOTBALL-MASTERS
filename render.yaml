@@ -7,12 +7,14 @@ services:
     runtime: node
     plan: starter            # free sleeps and has limited CPU; not reliable for steady 14-player matches
     numInstances: 1
-    buildCommand: npm ci && npm run build
+    buildCommand: npm ci --include=dev && npm run build
     preDeployCommand: npx drizzle-kit migrate --config drizzle.config.prod.ts
     startCommand: npm start
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:
+      - key: NODE_VERSION
+        value: "22.16.0"     # Next.js 16 requires Node >= 20.9; pin for reproducible Render builds
       - key: NODE_ENV
         value: production
       # Render injects PORT; Next.js `npm start` binds to it automatically.
